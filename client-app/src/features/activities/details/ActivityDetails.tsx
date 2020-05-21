@@ -6,12 +6,14 @@ interface IProps {
     activity: IActivity;
     setEditMode: (editMode: boolean) => void;
     setSelectedActivity: (activity: IActivity | null) => void;
+    submitting: boolean;
 }
 
 const ActivityDetails: React.FC<IProps> = ({
     activity,
     setEditMode,
-    setSelectedActivity
+    setSelectedActivity,
+    submitting
 }) => {
     return (
         <Card fluid>
@@ -27,8 +29,19 @@ const ActivityDetails: React.FC<IProps> = ({
             </Card.Content>
             <Card.Content extra>
                 <Button.Group widths={2}>
-                    <Button basic color='blue' content='Edit' onClick={() => setEditMode(true)}/>
-                    <Button basic color='grey' content='Cancel' onClick={() => setSelectedActivity(null)}/>
+                    <Button
+                        basic
+                        color='blue'
+                        content='Edit'
+                        onClick={() => setEditMode(true)}
+                    />
+                    <Button
+                        basic
+                        color='grey'
+                        content='Cancel'
+                        loading={submitting}
+                        onClick={() => setSelectedActivity(null)}
+                    />
                 </Button.Group>
             </Card.Content>
         </Card>

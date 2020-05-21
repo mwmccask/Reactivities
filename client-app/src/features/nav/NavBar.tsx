@@ -10,12 +10,20 @@ const NavBar: React.FC<IProps> = ({openCreateForm}) => {
         <Menu fixed='top' inverted>
             <Container>
                 <Menu.Item name="header">
-                    <img src="/assets/logo.png" alt="logo" style={{marginRight: '10px'}}/>
+                    <img
+                        alt="logo"
+                        src="/assets/logo.png"
+                        style={{marginRight: '10px'}}
+                    />
                     Reactivities
                 </Menu.Item>
                 <Menu.Item name='Activities'/>
                 <Menu.Item>
-                    <Button positive content='Create Activity' onClick={() => openCreateForm()}/>
+                    <Button
+                        content='Create Activity'
+                        onClick={() => openCreateForm()}
+                        positive
+                    />
                 </Menu.Item>
             </Container>
         </Menu>
