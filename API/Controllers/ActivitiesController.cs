@@ -46,10 +46,9 @@ namespace API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<Unit>> Delete(Guid id, Delete.Command command, CancellationToken cancellationToken)
+        public async Task<ActionResult<Unit>> Delete(Guid id, CancellationToken cancellationToken)
         {
-            command.Id = id;
-            return await this.mediator.Send(command, cancellationToken);
+            return await this.mediator.Send(new Delete.Command { Id = id }, cancellationToken);
         }
     }
 }
