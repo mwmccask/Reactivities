@@ -1,30 +1,22 @@
-import React from 'react';
-import { IActivity } from '../../../app/models/activity';
+import React, { useContext } from 'react';
 import { Button, Card, Image } from 'semantic-ui-react';
+import { observer } from 'mobx-react-lite';
+import ActivityStore from '../../../app/stores/activityStore';
 
-interface IProps {
-    activity: IActivity;
-    setEditMode: (editMode: boolean) => void;
-    setSelectedActivity: (activity: IActivity | null) => void;
-    submitting: boolean;
-}
+const ActivityDetails: React.FC = () => {
+    const activityStore = useContext(ActivityStore);
+    const {cancelSelectedActivity, openEditForm, selectedActivity: activity, submitting} = activityStore;
 
-const ActivityDetails: React.FC<IProps> = ({
-    activity,
-    setEditMode,
-    setSelectedActivity,
-    submitting
-}) => {
     return (
         <Card fluid>
-            <Image src={`/assets/categoryImages/${activity.category}.jpg`} wrapped ui={false} />
+            <Image src={`/assets/categoryImages/${activity!.category}.jpg`} wrapped ui={false} />
             <Card.Content>
-                <Card.Header>{activity.title}</Card.Header>
+                <Card.Header>{activity!.title}</Card.Header>
                 <Card.Meta>
-                    <span>{activity.date}</span>
+                    <span>{activity!.date}</span>
                 </Card.Meta>
                 <Card.Description>
-                    {activity.description}
+                    {activity!.description}
                 </Card.Description>
             </Card.Content>
             <Card.Content extra>
@@ -33,14 +25,14 @@ const ActivityDetails: React.FC<IProps> = ({
                         basic
                         color='blue'
                         content='Edit'
-                        onClick={() => setEditMode(true)}
+                        onClick={() => openEditForm(activity!.id)}
                     />
                     <Button
                         basic
                         color='grey'
                         content='Cancel'
                         loading={submitting}
-                        onClick={() => setSelectedActivity(null)}
+                        onClick={cancelSelectedActivity}
                     />
                 </Button.Group>
             </Card.Content>
@@ -48,4 +40,4 @@ const ActivityDetails: React.FC<IProps> = ({
     )
 };
 
-export default ActivityDetails;
+export default observer(ActivityDetails);
