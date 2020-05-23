@@ -1,11 +1,33 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Button, Card, Image } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import ActivityStore from '../../../app/stores/activityStore';
+import { RouteComponentProps, Link } from 'react-router-dom';
+import LoadingComponent from '../../../app/layout/LoadingComponent';
 
-const ActivityDetails: React.FC = () => {
+interface DetailParams {
+    id: string;
+};
+
+const ActivityDetails: React.FC<RouteComponentProps<DetailParams>> = ({
+    history,
+    match
+}) => {
     const activityStore = useContext(ActivityStore);
-    const {cancelSelectedActivity, openEditForm, selectedActivity: activity, submitting} = activityStore;
+    const {
+        activity,
+        loadActivity,
+        loadingInitial,
+        submitting
+    } = activityStore;
+
+    useEffect(() => {
+        loadActivity(match.params.id);
+    }, [loadActivity, match.params.id]);
+
+    if (loadingInitial || !activity) {
+        return <LoadingComponent content='Loading activity...'/>
+    }
 
     return (
         <Card fluid>
@@ -22,17 +44,18 @@ const ActivityDetails: React.FC = () => {
             <Card.Content extra>
                 <Button.Group widths={2}>
                     <Button
+                        as={Link}
                         basic
                         color='blue'
                         content='Edit'
-                        onClick={() => openEditForm(activity!.id)}
+                        to={`/manage/${activity.id}`}
                     />
                     <Button
                         basic
                         color='grey'
                         content='Cancel'
                         loading={submitting}
-                        onClick={cancelSelectedActivity}
+                        onClick={() => history.push('/activities')}
                     />
                 </Button.Group>
             </Card.Content>
