@@ -39,7 +39,7 @@ class ActivityStore {
                 });
             });
         } catch (error) {
-            runInAction('load activity error', () => console.log(error));
+            console.log(error);
         } finally {
             runInAction(() => this.loadingInitial = false);
         }
@@ -57,7 +57,7 @@ class ActivityStore {
                     this.activity = activity;
                 });
             } catch (error) {
-                runInAction('get activity failed', () => console.log(error))
+                console.log(error);
             } finally {
                 runInAction(() => this.loadingInitial = false);
             }
@@ -81,7 +81,7 @@ class ActivityStore {
                 this.activity = activity;
             });
         } catch (error) {
-            runInAction('create activity error', () => console.log(error));
+            console.log(error);
         } finally {
             runInAction(() => this.submitting = false);
         }
@@ -96,7 +96,7 @@ class ActivityStore {
                 this.activity = activity;
             });
         } catch (error) {
-            runInAction('edit activity error', () => console.log(error));
+            console.log(error);
         } finally {
             runInAction(() => this.submitting = false);
         }
@@ -107,14 +107,9 @@ class ActivityStore {
         this.target = event.currentTarget.name;
         try {
             await agent.Activities.delete(id);
-            runInAction('deleting activity', () => {
-                this.activitiesRegistry.delete(id);
-                if (this.activity?.id === id) {
-                    this.activity = null;
-                }
-            });
+            runInAction('deleting activity', () => this.activitiesRegistry.delete(id));
         } catch (error) {
-            runInAction('delete activity error', () => console.log(error));
+            console.log(error);
         } finally {
             runInAction(() => {
                 this.submitting = false;
