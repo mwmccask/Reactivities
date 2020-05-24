@@ -1,13 +1,13 @@
 import React, { useContext, useEffect } from 'react';
 import { Grid } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
-import ActivityStore from '../../../app/stores/activityStore';
 import { RouteComponentProps } from 'react-router-dom';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import ActivityDetailedHeader from './ActivityDetailedHeader';
 import ActivityDetailedInfo from './ActivityDetailedInfo';
 import ActivityDetailedChat from './ActivityDetailedChat';
 import ActivityDetailedSidebar from './ActivityDetailedSidebar';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 interface DetailParams {
     id: string;
@@ -17,12 +17,12 @@ const ActivityDetails: React.FC<RouteComponentProps<DetailParams>> = ({
     history,
     match
 }) => {
-    const activityStore = useContext(ActivityStore);
+    const rootStore = useContext(RootStoreContext);
     const {
         activity,
         loadActivity,
         loadingInitial,
-    } = activityStore;
+    } = rootStore.activityStore;
 
     useEffect(() => {
         loadActivity(match.params.id);
@@ -47,7 +47,7 @@ const ActivityDetails: React.FC<RouteComponentProps<DetailParams>> = ({
                 <ActivityDetailedSidebar/>
             </Grid.Column>
         </Grid>
-    )
+    );
 };
 
 export default observer(ActivityDetails);

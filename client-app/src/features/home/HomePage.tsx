@@ -1,8 +1,15 @@
-import React from 'react';
+import React, { useContext, Fragment } from 'react';
 import { Button, Container, Header, Image, Segment } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
+import { RootStoreContext } from '../../app/stores/rootStore';
+import LoginForm from '../user/LoginForm';
+import RegisterForm from '../user/RegisterForm';
 
 const HomePage = () => {
+    const rootStore = useContext(RootStoreContext);
+    const {isLoggedIn, user} = rootStore.userStore;
+    const {openModal} = rootStore.modalStore;
+
     return (
         <Segment inverted textAlign='center' vertical className='masthead' >
             <Container text>
@@ -15,18 +22,46 @@ const HomePage = () => {
                     />
                     Reactivities
                 </Header>
-                <Header as='h2' inverted content='Welcome to Reactivities'/>
-                <Button
-                    as={Link}
-                    inverted
-                    size='huge'
-                    to='/activities'
-                >
-                    Take me to the activities!
-                </Button>
+                {isLoggedIn && user
+                    ? (
+                        <Fragment>
+                            <Header
+                                as='h2'
+                                content={`Welcome back, ${user?.displayName}!`}
+                                inverted
+                            />
+                            <Button
+                                as={Link}
+                                inverted
+                                size='huge'
+                                to='/activities'
+                            >
+                                Go to activities!
+                            </Button>
+                        </Fragment>
+                    )
+                    : (
+                        <Fragment>
+                            <Button
+                                inverted
+                                onClick={() => openModal(<LoginForm/>)}
+                                size='huge'
+                            >
+                                Login
+                            </Button>
+                            <Button
+                                inverted
+                                onClick={() => openModal(<RegisterForm/>)}
+                                size='huge'
+                            >
+                                Register
+                            </Button>
+                        </Fragment>
+                    )
+                }
             </Container>
         </Segment>
-    )
+    );
 };
 
 export default HomePage;
