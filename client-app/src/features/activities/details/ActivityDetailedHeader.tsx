@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Header, Image, Item, Segment } from 'semantic-ui-react';
 import { IActivity } from '../../../app/models/activity';
 import { observer } from 'mobx-react-lite';
 import { Link } from 'react-router-dom';
 import { format } from 'date-fns';
+import { RootStoreContext } from '../../../app/stores/rootStore';
 
 const activityImageStyle = { filter: 'brightness(30%)' };
 
@@ -17,6 +18,9 @@ const activityImageTextStyle = {
 };
 
 const ActivityDetailedHeader: React.FC<{activity: IActivity}> = ({activity}) => {
+    const rootStore = useContext(RootStoreContext);
+    const {attendActivity, cancelAttendence, loading} = rootStore.activityStore;
+
     return (
         <Segment.Group>
             <Segment
@@ -51,16 +55,36 @@ const ActivityDetailedHeader: React.FC<{activity: IActivity}> = ({activity}) => 
                 attached='bottom'
                 clearing
             >
-                <Button color='teal'>Join Activity</Button>
-                <Button>Cancel attendance</Button>
-                <Button
-                    as={Link}
-                    color='orange'
-                    floated='right'
-                    to={`/manage/${activity.id}`}
-                >
-                    Manage Event
-                </Button>
+                {activity.isHost
+                    ? (
+                        <Button
+                            as={Link}
+                            color='orange'
+                            floated='right'
+                            to={`/manage/${activity.id}`}
+                        >
+                            Manage Event
+                        </Button>
+                    )
+                    : activity.isGoing
+                        ? (
+                            <Button
+                                loading={loading}
+                                onClick={cancelAttendence
+                            }>
+                                Cancel attendance
+                            </Button>
+                        )
+                        : (
+                            <Button
+                                color='teal'
+                                loading={loading}
+                                onClick={attendActivity}
+                            >
+                                Join Activity
+                            </Button>
+                        )
+                }
             </Segment>
         </Segment.Group>
     )
